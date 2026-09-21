@@ -18,7 +18,8 @@
   "homepage": "https://github.com/Rhaxa/athena-playwright-framework#readme",
   "devDependencies": {
     "@playwright/test": "1.57",
-    "@types/node": "^26.6.2"
+    "@types/node": "^22.20.4",
+    "typescript": "5.9"
   },
   "directories": {
     "test": "tests"
