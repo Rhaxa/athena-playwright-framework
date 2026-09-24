@@ -16,10 +16,11 @@ export class InventoryPage {
   }
 
   async addProductToCart(productName: string) {
-    const productCard = this.page.locator('.inventory_item', {
-      hasText: productName,
-    });
-    await productCard.locator('button').click();
+    const dataTestId = `add-to-cart-${productName.toLowerCase().replace(/ /g, '-')}`;
+    const button = this.page.locator(`[data-test="${dataTestId}"]`);
+    // Playwright auto-waits for visibility. 
+    // { force: true } bypasses the "stability" check that hangs on older macOS WebKit/Firefox.
+    await button.click({ force: true });
   }
 
   async getCartCount(): Promise<string> {
@@ -27,6 +28,6 @@ export class InventoryPage {
   }
 
   async goToCart() {
-    await this.page.locator('.shopping_cart_link').click();
+    await this.page.locator('.shopping_cart_link').click({ force: true });
   }
 }

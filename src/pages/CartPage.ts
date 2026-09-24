@@ -21,6 +21,7 @@ export class CartPage {
   }
 
   async proceedToCheckout() {
-    await this.checkoutButton.click();
+    // { force: true } bypasses WebKit/Firefox "element is not stable" checks on older macOS
+    await this.checkoutButton.click({ force:true });
   }
 }

@@ -19,9 +19,13 @@
   "devDependencies": {
     "@playwright/test": "1.57",
     "@types/node": "^22.20.4",
+    "dotenv": "^18.0.3",
     "typescript": "5.9"
   },
   "directories": {
     "test": "tests"
+  },
+  "allowScripts": {
+    "fsevents@2.3.2": true
   }
 }

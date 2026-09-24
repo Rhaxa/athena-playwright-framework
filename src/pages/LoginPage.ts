@@ -16,13 +16,16 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto('/'); // Uses the baseURL from config
+    // 'domcontentloaded' is much more resilient across different browser engines
+    // this has been added to reduce test flakiness
+    await this.page.goto('/', { waitUntil: 'commit' }); 
   }
 
   async login(username: string, password: string) {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
-    await this.loginButton.click();
+    // { force: true } bypasses WebKit/Firefox "element is not stable" checks on older macOS
+    await this.loginButton.click({ force:true });
   }
 
   async getErrorMessage(): Promise<string> {

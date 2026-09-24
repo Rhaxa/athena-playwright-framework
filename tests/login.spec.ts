@@ -10,7 +10,7 @@ test.describe('SauceDemo Login Tests', () => {
     await loginPage.goto();
     
     // Act
-    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.login(process.env.STANDARD_USER!, process.env.SECRET_PASSWORD!);
     
     // Assert
     await expect(page).toHaveURL(/.*inventory/);
