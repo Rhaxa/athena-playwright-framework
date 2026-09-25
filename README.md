@@ -85,6 +85,7 @@ athena-playwright-framework/
 ├── Dockerfile          # Containerization configuration
 ├── package.json        # Node dependencies and scripts
 └── playwright.config.ts# Playwright configuration
+```
 
 ## 🎯 Future Enhancements
 - Integration of Allure Report for advanced test analytics.
