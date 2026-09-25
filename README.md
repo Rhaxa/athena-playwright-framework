@@ -70,19 +70,21 @@ To run the tests in an isolated, reproducible Linux environment identical to the
 
 ## 📂 Project Structure
 
+```text
+athena-playwright-framework/
 ├── src/
-│   ├── pages/          # Page Object Model classes (LoginPage, InventoryPage, etc.)
-│   └── fixtures/       # Custom Playwright fixtures for dependency injection
+│   ├── pages/          # Page Object Model classes
+│   └── fixtures/       # Custom Playwright fixtures
 ├── tests/
 │   ├── api/            # Standalone REST API tests
-│   ├── ui/             # End-to-end UI and Network Interception tests
+│   ├── ui/             # E2E UI and Network Interception tests
 │   └── *.spec.ts       # Test specifications
 ├── .env                # Environment variables (gitignored)
 ├── .gitignore          # Git ignore rules
 ├── .dockerignore       # Docker ignore rules
 ├── Dockerfile          # Containerization configuration
 ├── package.json        # Node dependencies and scripts
-└── playwright.config.ts# Playwright configuration (browsers, retries, artifacts)
+└── playwright.config.ts# Playwright configuration
 
 ## 🎯 Future Enhancements
 - Integration of Allure Report for advanced test analytics.
