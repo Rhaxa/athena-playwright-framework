@@ -5,7 +5,6 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  # BONUS: Run automatically every night at 2 AM UTC to catch flaky tests!
   schedule:
     - cron: '0 2 * * *' 
 
@@ -14,9 +13,8 @@ jobs:
     name: Run Playwright Tests
     runs-on: ubuntu-latest
     
-    # THE MAGIC: This creates 3 parallel jobs, one for each browser
     strategy:
-      fail-fast: false # If Chromium fails, still let Firefox and WebKit finish
+      fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
 
@@ -30,7 +28,11 @@ jobs:
       - name: Build Docker image
         run: docker build -t athena-playwright:ci .
 
-      # Pass the matrix browser variable into the Docker container
+      # This creates the report folder on the host machine first
+      - name: Prepare report directory
+        run: mkdir -p playwright-report
+
+      # This uses -v to mount the volume
       - name: Run tests in Docker
         env:
           BASE_URL: 'https://www.saucedemo.com'
@@ -39,6 +41,7 @@ jobs:
           BROWSER: ${{ matrix.browser }} 
         run: |
           docker run --rm \
+            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
             -e BASE_URL \
             -e STANDARD_USER \
             -e SECRET_PASSWORD \
