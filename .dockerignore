@@ -1,0 +1,7 @@
+node_modules
+test-results
+playwright-report
+blob-report
+.git
+.env
+.DS_Store
