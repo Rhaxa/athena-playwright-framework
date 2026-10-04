@@ -1,16 +1,25 @@
-name: Playwright Tests
+name: Playwright Cross-Browser Tests
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  # BONUS: Run automatically every night at 2 AM UTC to catch flaky tests!
+  schedule:
+    - cron: '0 2 * * *' 
 
 jobs:
   test:
-    name: Run Playwright Tests in Docker
+    name: Run Playwright Tests
     runs-on: ubuntu-latest
     
+    # THE MAGIC: This creates 3 parallel jobs, one for each browser
+    strategy:
+      fail-fast: false # If Chromium fails, still let Firefox and WebKit finish
+      matrix:
+        browser: [chromium, firefox, webkit]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,23 +30,26 @@ jobs:
       - name: Build Docker image
         run: docker build -t athena-playwright:ci .
 
-      # Run tests, passing secrets securely from the GitHub Vault
+      # Pass the matrix browser variable into the Docker container
       - name: Run tests in Docker
         env:
           BASE_URL: 'https://www.saucedemo.com'
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
           SECRET_PASSWORD: ${{ secrets.SECRET_PASSWORD }}
+          BROWSER: ${{ matrix.browser }} 
         run: |
           docker run --rm \
             -e BASE_URL \
             -e STANDARD_USER \
             -e SECRET_PASSWORD \
-            athena-playwright:ci
+            -e BROWSER \
+            athena-playwright:ci \
+            npx playwright test --project=$BROWSER
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
-          retention-days: 30
+          retention-days: 15
