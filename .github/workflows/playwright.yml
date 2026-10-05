@@ -28,11 +28,11 @@ jobs:
       - name: Build Docker image
         run: docker build -t athena-playwright:ci .
 
-      # This creates the report folder on the host machine first
-      - name: Prepare report directory
-        run: mkdir -p playwright-report
+      # This creates both report folders on the host machine first
+      - name: Prepare report directories
+        run: mkdir -p playwright-report allure-results
 
-      # This uses -v to mount the volume
+      # This uses -v to mount the volumes for both reports
       - name: Run tests in Docker
         env:
           BASE_URL: 'https://www.saucedemo.com'
@@ -42,6 +42,7 @@ jobs:
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
+            -v ${{ github.workspace }}/allure-results:/app/allure-results \
             -e BASE_URL \
             -e STANDARD_USER \
             -e SECRET_PASSWORD \
@@ -49,10 +50,34 @@ jobs:
             athena-playwright:ci \
             npx playwright test --project=$BROWSER
 
+      # This installs Java on the GitHub runner (Required for Allure CLI)
+      # NOTE: Allure Commandline v3.x requires Java 11 or 17 LTS. 
+      # If upgrading allure-commandline in package.json, verify Java compatibility here.
+      - name: Set up JDK for Allure
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # This generates the Allure HTML report from the raw results
+      - name: Generate Allure Report
+        if: always()
+        run: npx allure generate allure-results --clean -o allure-report
+
+      # Uploads the default Playwright report as an artifact
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
+          retention-days: 15
+
+      # Uploads the new Allure report as an artifact
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report-${{ matrix.browser }}
+          path: allure-report/
           retention-days: 15
