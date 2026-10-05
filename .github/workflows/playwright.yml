@@ -50,6 +50,10 @@ jobs:
             athena-playwright:ci \
             npx playwright test --project=$BROWSER
 
+      # This installs Node dependencies on the HOST runner (Required for npx allure)
+      - name: Install Node dependencies on host
+        run: npm ci
+
       # This installs Java on the GitHub runner (Required for Allure CLI)
       # NOTE: Allure Commandline v3.x requires Java 11 or 17 LTS. 
       # If upgrading allure-commandline in package.json, verify Java compatibility here.
