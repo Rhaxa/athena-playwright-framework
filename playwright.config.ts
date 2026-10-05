@@ -29,7 +29,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
     ['allure-playwright', { 
-      outputFolder: 'allure-results',
+      resultsDir: 'allure-results',
       detail: true,
       suiteTitle: false 
     }]
