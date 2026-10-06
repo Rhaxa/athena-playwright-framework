@@ -81,6 +81,17 @@ To run the tests in an isolated, reproducible Linux environment identical to the
    ```
    *(The `--rm` flag ensures the container is automatically cleaned up after execution).*
 
+### 📊 Viewing Downloaded CI/CD Reports
+
+Because modern reporting tools (like Allure) are Single Page Applications (SPAs), opening the `index.html` file directly from your local file system will result in a browser security (CORS) error. To view the downloaded artifacts properly:
+
+1. Download the artifact `.zip` from the GitHub Actions "Artifacts" section.
+2. Extract the folder to your local machine.
+3. Open your terminal, navigate into the extracted folder, and spin up a temporary local server:
+   ```bash
+   npx serve .
+4. Open the provided local URL (e.g., http://localhost:3000) in your browser to view the fully interactive dashboard.
+
 ## 📂 Project Structure
 
 ```text
